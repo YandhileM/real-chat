@@ -16,7 +16,7 @@ export default function Navbar() {
         </Link>
         {isLoading || user == null ? (
           <Button asChild>
-            <Link href="auth/login">Sign in</Link>
+            <Link href="login">Sign in</Link>
           </Button>
         ) : (
           <div className="flex items-center gap-2">
