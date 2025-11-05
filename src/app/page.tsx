@@ -9,7 +9,8 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
-import { Link, MessageSquareIcon } from "lucide-react";
+import {  MessageSquareIcon } from "lucide-react";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -25,7 +26,7 @@ export default function Home() {
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
-          <Button >
+          <Button asChild>
             <Link href="/rooms/new">New Chat Room</Link>
           </Button>
         </EmptyContent>
