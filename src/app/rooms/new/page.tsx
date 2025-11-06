@@ -1,34 +1,32 @@
-"use client";
+"use client"
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
+} from "@/components/ui/card"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   Field,
   FieldContent,
   FieldError,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { LoadingSwap } from "@/components/ui/loading-swap";
-import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
-import { Controller, useForm } from "react-hook-form";
-import z from "zod";
+} from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { LoadingSwap } from "@/components/ui/loading-swap"
+import { createRoom } from "@/services/supabase/actions/rooms"
+import { createRoomSchema } from "@/services/supabase/schemas/rooms"
+import { zodResolver } from "@hookform/resolvers/zod"
+import Link from "next/link"
+import { Controller, useForm } from "react-hook-form"
+import { toast } from "sonner"
+import z from "zod"
 
-const formSchema = z.object({
-  name: z.string().min(1).trim(),
-  isPublic: z.boolean(),
-});
-
-type FormData = z.infer<typeof formSchema>;
+type FormData = z.infer<typeof createRoomSchema>
 
 export default function NewRoomPage() {
   const form = useForm<FormData>({
@@ -36,18 +34,22 @@ export default function NewRoomPage() {
       name: "",
       isPublic: false,
     },
-    resolver: zodResolver(formSchema),
-  });
+    resolver: zodResolver(createRoomSchema),
+  })
 
   async function handleSubmit(data: FormData) {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log(data);
+    const { error, message } = await createRoom(data)
+
+    if (error) {
+      toast.error(message)
+    }
   }
+
   return (
-    <div>
-      <Card>
+    <div className="container mx-auto px-4 py-8">
+      <Card className="w-full max-w-lg mx-auto">
         <CardHeader>
-          <CardTitle>New Chat Room</CardTitle>
+          <CardTitle>New Room</CardTitle>
           <CardDescription>Create a new chat room</CardDescription>
         </CardHeader>
         <CardContent>
@@ -69,7 +71,8 @@ export default function NewRoomPage() {
                     )}
                   </Field>
                 )}
-              />{" "}
+              />
+
               <Controller
                 name="isPublic"
                 control={form.control}
@@ -102,7 +105,7 @@ export default function NewRoomPage() {
               <Field orientation="horizontal" className="w-full">
                 <Button
                   type="submit"
-                  className="flex-grow"
+                  className="grow"
                   disabled={form.formState.isSubmitting}
                 >
                   <LoadingSwap isLoading={form.formState.isSubmitting}>
@@ -118,5 +121,5 @@ export default function NewRoomPage() {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }
