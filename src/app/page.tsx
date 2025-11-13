@@ -17,9 +17,12 @@ import Link from "next/link";
 import {
   Card,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { JoinRoomButton } from "@/components/join-room-button";
+import { LeaveRoomButton } from "@/components/leave-room-button";
 
 export default async function Home() {
   const user = await getCurrentUser();
@@ -113,6 +116,25 @@ function RoomCard({
           ({memberCount} member{memberCount !== 1 ? "s" : ""}) <br />
         </CardDescription>
       </CardHeader>
+      <CardFooter className="gap-2">
+        {isJoined ? (
+          <>
+            <Button asChild className="grow" size="sm">
+              <Link href={`/rooms/${id}`}>Enter Room</Link>
+            </Button>
+            <LeaveRoomButton roomId={id} size="sm" variant="destructive">
+              Leave
+            </LeaveRoomButton>
+          </>
+        ) : (
+          <JoinRoomButton
+            roomId={id}
+            variant="outline"
+            className="grow"
+            size="sm"
+          />
+        )}
+      </CardFooter>
     </Card>
   );
 }
