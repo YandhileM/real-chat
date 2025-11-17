@@ -1,36 +1,153 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Real-Time Chat Application
+
+A modern, real-time chat application built with Next.js 16, React 19, Supabase, and TypeScript. Features secure authentication, real-time messaging with presence indicators, and infinite scroll message history.
+
+## Features
+
+- **Real-time messaging** - Instant message delivery using Supabase Realtime with broadcast channels
+- **Online presence** - See who's currently active in each chat room
+- **OAuth authentication** - Secure user authentication via Supabase Auth
+- **Private chat rooms** - Create and invite users to private rooms
+- **Infinite scroll** - Efficient message loading with intersection observer
+- **Row Level Security** - Database-level access control for all data
+- **Dark mode** - Built-in dark theme support
+- **Type-safe** - Full TypeScript support with auto-generated database types
+
+## Tech Stack
+
+- **Framework**: Next.js 16 (App Router)
+- **UI Library**: React 19
+- **Styling**: Tailwind CSS 4
+- **Components**: shadcn/ui, Radix UI
+- **Backend**: Supabase (Auth, Database, Realtime)
+- **Form Validation**: Zod + React Hook Form
+- **Icons**: Lucide React
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 20+
+- A Supabase project ([create one here](https://supabase.com))
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd real-chat
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Set up environment variables:
+
+Create a `.env.local` file in the root directory:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=your_anon_key
+SUPABASE_SECRET_KEY=your_service_role_key
+```
+
+4. Run database migrations:
+
+```bash
+# Link to your Supabase project (one-time setup)
+npx supabase link --project-ref your-project-ref
+
+# Push migrations to your database
+npx supabase db push
+```
+
+5. Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Development Commands
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm start
+
+# Run linting
+npm run lint
+
+# Generate TypeScript types from Supabase schema
+npm run gen-types
+```
+
+## Project Structure
+
+```
+src/
+├── app/                      # Next.js App Router pages
+│   ├── auth/                # Authentication pages
+│   └── rooms/               # Chat room pages
+├── components/              # React components
+│   ├── ui/                  # shadcn/ui components
+│   ├── chat-input.tsx       # Message input component
+│   ├── chat-message.tsx     # Message display component
+│   └── invite-user-modal.tsx # User invitation modal
+├── lib/                     # Utilities and configurations
+│   ├── middleware.ts        # Auth middleware
+│   └── server.ts            # Server-side Supabase client
+└── services/
+    └── supabase/
+        ├── actions/         # Server Actions
+        ├── schemas/         # Zod validation schemas
+        ├── types/           # Generated TypeScript types
+        └── client.ts        # Client-side Supabase client
+```
+
+## How It Works
+
+### Real-time Architecture
+
+The application uses Supabase Realtime with a three-part architecture:
+
+1. **Client Subscriptions**: Users subscribe to private channels (`room:${roomId}:messages`) for their chat rooms
+2. **Database Triggers**: When a message is inserted, a PostgreSQL trigger automatically broadcasts it to the appropriate Realtime channel
+3. **Row Level Security**: RLS policies ensure users can only access messages from rooms they're members of
+
+### Authentication Flow
+
+1. Users authenticate via OAuth (configured in Supabase)
+2. OAuth callback exchanges code for session
+3. Middleware protects all routes except `/auth/*` and `/login`
+4. User profiles are automatically created via database trigger
+
+### Database Schema
+
+- `user_profile` - User information (auto-created on signup)
+- `chat_room` - Chat rooms with privacy settings
+- `chat_room_member` - Room membership junction table
+- `messages` - Chat messages with author and room references
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Supabase Documentation](https://supabase.com/docs)
+- [Tailwind CSS](https://tailwindcss.com/docs)
+- [shadcn/ui](https://ui.shadcn.com)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Contributing
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-## Deploy on Vercel
+## License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is open source and available under the [MIT License](LICENSE).
