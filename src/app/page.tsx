@@ -35,9 +35,9 @@ export default async function Home() {
     getJoinedRomms(user.id),
   ]);
 
-  if (publicRooms.length === 0 && joinedRooms.length > 0) {
+  if (publicRooms.length === 0 && joinedRooms.length === 0) {
     return (
-      <div className="conatainer mx-auto max-w-3xl px-4 py-8 space-y-8">
+      <div className="container mx-auto max-w-3xl px-4 py-8 space-y-8">
         <Empty className="border border-dashed">
           <EmptyHeader>
             <EmptyMedia variant="icon">
@@ -132,7 +132,9 @@ function RoomCard({
             variant="outline"
             className="grow"
             size="sm"
-          />
+          >
+            Join
+          </JoinRoomButton>
         )}
       </CardFooter>
     </Card>
@@ -164,7 +166,6 @@ async function getJoinedRomms(userId: string) {
   const { data, error } = await supabase
     .from("chat_room")
     .select("id,name,chat_room_member (member_id)")
-    .eq("is_public", true)
     .order("name", { ascending: true });
 
   if (error) {
