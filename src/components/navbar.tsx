@@ -11,12 +11,12 @@ export default function Navbar() {
   return (
     <div className="border-b bg-background h-header">
       <nav className="container mx-auto px-4 flex justify-between items-center h-full gap-4">
-        <Link href="/" className="text-xl font">
+        <Link href="/" className="text-xl font-bold">
           Supachat
         </Link>
         {isLoading || user == null ? (
           <Button asChild>
-            <Link href="login">Sign in</Link>
+            <Link href="/auth/login">Sign In</Link>
           </Button>
         ) : (
           <div className="flex items-center gap-2">

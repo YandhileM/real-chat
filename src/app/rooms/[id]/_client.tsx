@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button"
 import { Message } from "@/services/supabase/actions/messages"
 import { createClient } from "@/services/supabase/client"
 import { RealtimeChannel } from "@supabase/supabase-js"
+import { ArrowLeftIcon } from "lucide-react"
+import Link from "next/link"
 import { useEffect, useState } from "react"
 
 export function RoomClient({
@@ -50,12 +52,17 @@ export function RoomClient({
 
   return (
     <div className="container mx-auto h-screen-with-header border border-y-0 flex flex-col">
-      <div className="flex items-center justify-between gap-2 p-4">
-        <div className="border-b">
-          <h1 className="text-2xl font-bold">{room.name}</h1>
-          <p className="text-muted-foreground text-sm">
-            {connectedUsers} {connectedUsers === 1 ? "user" : "users"} online
-          </p>
+      <div className="flex items-center justify-between gap-2 p-3 sm:p-4">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0 border-b">
+          <Button variant="ghost" size="icon" className="shrink-0" asChild>
+            <Link href="/"><ArrowLeftIcon /></Link>
+          </Button>
+          <div className="min-w-0">
+            <h1 className="text-lg sm:text-2xl font-bold truncate">{room.name}</h1>
+            <p className="text-muted-foreground text-xs sm:text-sm">
+              {connectedUsers} {connectedUsers === 1 ? "user" : "users"} online
+            </p>
+          </div>
         </div>
         <InviteUserModal roomId={room.id} />
       </div>
