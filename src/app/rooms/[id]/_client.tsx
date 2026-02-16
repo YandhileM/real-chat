@@ -153,7 +153,6 @@ function useRealtimeChat({
 
       newChannel = supabase.channel(`room:${roomId}:messages`, {
         config: {
-          private: true,
           presence: {
             key: userId,
           },
