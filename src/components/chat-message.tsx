@@ -50,7 +50,7 @@ export function ChatMessage({
             {DATE_FORMATTER.format(new Date(created_at))}
           </span>
         </div>
-        <p className="text-sm wrap-break-words whitespace-pre">{text}</p>
+        <p className="text-sm wrap-break-word whitespace-pre-wrap">{text}</p>
       </div>
     </div>
   )
